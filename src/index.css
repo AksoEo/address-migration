@@ -1,0 +1,241 @@
+html {
+    font-family: system-ui, sans-serif;
+    --accent: #0c0;
+}
+
+#main {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+}
+#main > .main-scroller {
+    height: 0;
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 32px;
+}
+
+.file-navigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.address-editor {
+    margin-top: 1em;
+}
+.address-editor .original-address {
+    font-size: 1.2em;
+    border-bottom: 1px solid gray;
+    margin-bottom: 1em;
+}
+.address-editor-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.address-field-line {
+    border: 1px solid black;
+}
+.address-field-line td {
+    padding: 4px;
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+.address-field-line.is-mismatched {
+    background: #f9b;
+    --accent: #f03;
+}
+.address-field-line.is-mismatched.has-value {
+    background: #f9b5;
+    --accent: #ea3;
+}
+.address-field-line.is-missing-one {
+    background: #feb;
+    --accent: #ea3;
+}
+.address-field-line .field-label {
+    text-align: right;
+    border-right: 1px solid black;
+    padding-right: 4px;
+}
+.address-field-line .field-input {
+    width: 30%;
+}
+.address-field-line .field-input-inner {
+    width: 100%;
+    display: flex;
+    gap: 4px;
+}
+.address-field-line .field-input .inner-copyable {
+    display: inline-block;
+    width: 100%;
+    border-radius: 4px;
+    padding: 1px 2px;
+    cursor: default;
+}
+.address-field-line .field-input .inner-copyable:empty {
+    display: none;
+}
+.address-field-line .field-input .inner-copyable:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+.address-field-line .field-input .inner-copyable:active {
+    background: rgba(0, 0, 0, 0.2);
+}
+.address-field-line .field-value {
+    width: 100%;
+}
+.address-field-line input {
+    margin: 0;
+    background: rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 1px 2px;
+    font: inherit;
+    outline: none;
+}
+.address-field-line input:focus {
+    box-shadow: 0 0 0 4px var(--accent);
+}
+.address-field-line .confidence-value {
+    font-size: smaller;
+    padding: 1px 2px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    align-self: center;
+}
+.address-field-line .confidence-value.is-under-threshold {
+    background: #d73;
+    color: white;
+}
+.address-field-line.is-disabled {
+    opacity: 0.6;
+}
+.address-field-line.is-disabled .disabled-value {
+    cursor: not-allowed;
+}
+.address-field-line.invalid input {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: red;
+}
+.address-field-line .disabled-value {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 4px;
+    min-height: 1em;
+}
+
+.live-validation {
+    margin-top: 8px;
+}
+.live-validation .validation-errors {
+    border: 1px solid red;
+    border-radius: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.live-validation .validation-errors li {
+    padding: 4px 8px;
+}
+.live-validation .validation-errors li + li {
+    border-top: 1px solid rgba(255, 0, 0, 0.2);
+}
+.live-validation .validation-formatted {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+.live-validation .validation-formatted .formatted-title {
+    padding: 4px 8px 2px;
+    font-weight: bold;
+    font-size: smaller;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.live-validation .validation-formatted .inner-address {
+    padding: 2px 8px 4px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+}
+.action-buttons button {
+    font: inherit;
+}
+
+.links-title {
+    margin-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+    padding-top: 8px;
+    font-weight: bold;
+}
+.supplemental-links {
+    font-size: smaller;
+    margin-top: 4px;
+}
+.supplemental-links a {
+    color: #195;
+}
+
+.key-hints {
+    flex-shrink: 0;
+    background: black;
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+}
+.key-hints .key-hint {
+    padding: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin: 4px 2px;
+}
+.key-hints .key-hint kbd {
+    display: inline-block;
+    text-align: center;
+    font: inherit;
+    border: 1px solid currentColor;
+    min-width: 1em;
+    border-radius: 4px;
+    padding: 1px 2px;
+    margin: 0 1px;
+    box-shadow: 0 2px currentColor;
+}
+.key-hints .key-hint .hint-label {
+    margin-left: 4px;
+}
+
+.jump-targets-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+}
+.jump-targets-overlay .jump-hint {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-100%, -50%);
+    min-width: 1em;
+    text-align: center;
+    background: white;
+    color: black;
+    border-radius: 4px;
+    padding: 1px 2px;
+    font-size: 12px;
+    border: 1px solid currentColor;
+    box-shadow: 0 2px currentColor;
+}
+.jump-targets-overlay .jump-hint.is-highlighted {
+    background: #ddd;
+}
