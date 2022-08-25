@@ -210,7 +210,7 @@ function Confidence({ conf }) {
     `;
 }
 
-function AddressFieldLine({ disabled, id, a, b, aConf, bConf, value, onChange, jumpName, valid, list }) {
+function AddressFieldLine({ disabled, id, a, b, hasChk, chk, aConf, bConf, value, onChange, jumpName, valid, list }) {
     const inputRef = useRef();
 
     const onKeyDown = e => {
@@ -291,6 +291,16 @@ function AddressFieldLine({ disabled, id, a, b, aConf, bConf, value, onChange, j
                     ${!!b && html`<${Confidence} conf=${bConf} />`}
                 </div>
             </td>
+            ${hasChk && html`<td class="field field-input field-c">
+                <div class="field-input-inner">
+                    <span class="inner-copyable" onClick=${() => {
+                        onChange(chk);
+                        inputRef.current?.focus();
+                    }}>
+                        ${chk}
+                    </span>
+                </div>
+            </td>`}
             <td class="field field-value">
                 ${(id === 'country' || disabled) ? html`
                     <span class="disabled-value">${value}</span>
@@ -495,6 +505,8 @@ class AddressEditor extends Component {
                         id=${field}
                         a=${input.a[field]}
                         b=${input.b[field]}
+                        hasChk=${!!input.chk}
+                        chk=${input.chk && input.chk[field]}
                         aConf=${input.a.confidence ? input.a.confidence[field] : null}
                         bConf=${input.b.confidence ? input.b.confidence[field] : null}
                         value=${address[field]}
@@ -522,6 +534,7 @@ class AddressEditor extends Component {
                         <td></td>
                         <th>A</th>
                         <th>B</th>
+                        ${input.chk && html`<th>RO</th>`}
                         <th>${STRINGS.resultsTitle}</th>
                     </tr>
                     </thead>
@@ -531,6 +544,7 @@ class AddressEditor extends Component {
                             <th class="field field-label">${STRINGS.fields.country}</th>
                             <td class="field">${countryNamesEo[country]}</td>
                             <td class="field">${countryNamesEo[country]}</td>
+                            <td class="field">${input.chk && countryNamesEo[country]}</td>
                             <td class="field">
                                 <span class="disabled-value">
                                     ${countryNamesEo[country]}
@@ -696,7 +710,24 @@ class FileEditor extends Component {
             for (const field of ADDR_FIELDS) {
                 const a = entry.a[field];
                 const b = entry.b[field];
-                addr[field] = a === b ? a : (!a || !b) ? (a || b) : '';
+
+                if (a === b) {
+                    // both parsers in agreement
+                    addr[field] = a;
+                } else if (a && b && a !== b) {
+                    // both parsers in disagreement
+                    if (entry.chk) {
+                        // check available
+                        if (entry.chk[field] === a) addr[field] = a;
+                        else if (entry.chk[field] === b) addr[field] = b;
+                    }
+                } else if (!a || !b) {
+                    // only one parser has data
+                    addr[field] = a || b;
+                } else if (!a && !b && entry.chk) {
+                    // only check available
+                    addr[field] = entry.chk[field];
+                }
             }
         }
 

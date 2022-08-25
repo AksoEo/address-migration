@@ -4,6 +4,8 @@ const postal = require('node-postal');
 const { parse: parseCsv } = require('csv/sync');
 const fs = require('fs');
 
+const useAddressParts = true;
+
 class DeepParse {
     constructor() {
         const python = process.env.PYTHON;
@@ -305,7 +307,8 @@ const inputItems = (() => {
     const data = parseCsv(fs.readFileSync('input.csv', 'utf-8'));
     return data.map(([id, str, country]) => ({ id, str, country }));
 })();
-const addressParts = (() => {
+
+const addressParts = useAddressParts ? (() => {
     const data = parseCsv(fs.readFileSync('addresses.csv', 'utf-8'));
     const index = {};
     for (const item of data) {
@@ -320,7 +323,7 @@ const addressParts = (() => {
         };
     }
     return index;
-})();
+})() : null;
 
 async function main() {
     const outputFile = 'output.addrs';
@@ -335,11 +338,14 @@ async function main() {
             batchItems.push(parseAddress(item.id, item.country, item.str));
         }
         const batchResults = await Promise.all(batchItems);
-        for (const item of batchResults) {
-            item.c = addressParts[item.id];
+        if (useAddressParts) {
+            for (const item of batchResults) {
+                item.chk = addressParts[item.id];
+            }
         }
         fs.appendFileSync(outputFile, batchResults.map(item => JSON.stringify(item)).join('\n') + '\n');
     }
+    console.log('Done!');
 }
 main().catch(err => {
     console.error(err);
