@@ -410,9 +410,9 @@ class AddressEditor extends Component {
 
             this.setState({
                 shownFields: result.allowedFields,
-                cityChoices: result.cityChoices.map(x => x[0]),
-                cityAreaChoices: result.cityAreaChoices.map(x => x[0]),
-                countryAreaChoices: result.countryAreaChoices.map(x => x[0]),
+                cityChoices: [...new Set(result.cityChoices.flatMap(x => x))],
+                cityAreaChoices: [...new Set(result.cityAreaChoices.flatMap(x => x))],
+                countryAreaChoices: [...new Set(result.countryAreaChoices.flatMap(x => x))],
             });
         }).catch(() => {
             this.setState({ shownFields: ADDR_FIELDS });

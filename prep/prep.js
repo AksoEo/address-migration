@@ -202,6 +202,7 @@ const EMPTY = () => ({
 
 const dp = new DeepParse();
 async function parseAddress(id, country, str) {
+    if (str.includes('\n')) throw new Error('input has newlines');
     const postalResult = postal.parser.parse_address(str);
     const dpResult = await dp.parse(str);
 
