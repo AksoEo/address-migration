@@ -58,6 +58,7 @@ const JUMP_KEYS = {
 const KEY_HINTS = {
     useA: ['⌃,', 'Kopii A'],
     useB: ['⌃.', 'Kopii B'],
+    useC: ['⌃;', 'Kopii RO'],
     moveUp: ['↑', 'Supren'],
     moveDown: ['↓', 'Malsupren'],
     jumpTo: ['⌃', 'Ŝalti al…'],
@@ -72,6 +73,13 @@ const KEY_HINT_SETS = {
     ],
     addressFieldInput: [
         'useA', 'useB',
+        'moveUp', 'moveDown',
+        'jumpTo',
+        'skip',
+        'save',
+    ],
+    addressFieldInputChecked: [
+        'useA', 'useB', 'useC',
         'moveUp', 'moveDown',
         'jumpTo',
         'skip',
@@ -222,6 +230,9 @@ function AddressFieldLine({ disabled, id, a, b, hasChk, chk, aConf, bConf, value
             } else if (e.key === '.') {
                 e.preventDefault();
                 onChange(b);
+            } else if (e.key === ';' && hasChk) {
+                e.preventDefault();
+                onChange(chk);
             }
         } else if (e.key.startsWith('Arrow')) {
             const tr = e.target.parentNode?.parentNode;
@@ -309,7 +320,7 @@ function AddressFieldLine({ disabled, id, a, b, hasChk, chk, aConf, bConf, value
                         ref=${inputRef}
                         list=${list}
                         value=${value || ''}
-                        data-keybinds="addressFieldInput"
+                        data-keybinds=${hasChk ? 'addressFieldInputChecked' : 'addressFieldInput'}
                         data-jump-name=${jumpName}
                         onKeyDown=${onKeyDown}
                         onInput=${onInput} />
